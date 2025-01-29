@@ -27,7 +27,10 @@ def main():
 	region = get_game_window()
 	
 	# Initialize YOLOv8 with GPU support
-	model = YOLO(MODEL_PATH).to("cuda" if torch.cuda.is_available() else "cpu")
+	# model = YOLO(MODEL_PATH).to("cuda" if torch.cuda.is_available() else "cpu")
+
+	# once the model is trained we use this
+	model = YOLO("runs/detect/train8/weights/best.pt").to("cuda" if torch.cuda.is_available() else "cpu")
 	
 	# Ensure OpenCV reuses the window instead of opening new ones
 	cv2.namedWindow("Cuphead Detection", cv2.WINDOW_NORMAL)
