@@ -3,8 +3,8 @@ import torch
 from ultralytics import YOLO
 
 def main():
-    model = YOLO("yolov8n.pt")  # Load a YOLOv8 pre-trained model or your custom model
-    model.train(data="datasets/cuphead/data.yaml", epochs=50, imgsz=640, rect=True)
+	model = YOLO("yolov8n.pt")  # Load a YOLOv8 pre-trained model or your custom model
+	model.train(data="datasets/cuphead/data.yaml", epochs=50, imgsz=640, rect=True)
 
 if __name__ == '__main__':
-    main()
+	main()

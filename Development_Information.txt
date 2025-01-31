@@ -1,0 +1,11 @@
+# Create a new .venv
+python -m venv .venv
+
+# Activate the virtual environment
+.\.venv\Scripts\activate
+
+# download all dependencies required
+pip install -r requirements.txt
+
+# If you want to pip install a new dependency, update the requirements.txt after
+pip freeze > requirements.txt
