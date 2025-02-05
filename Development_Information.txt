@@ -2,6 +2,7 @@
 python -m venv .venv
 
 # Activate the virtual environment
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 .\.venv\Scripts\activate
 
 # download all dependencies required

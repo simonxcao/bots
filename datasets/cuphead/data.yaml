@@ -2,12 +2,12 @@ train: C:/Users/froze/OneDrive/Desktop/CS175/bots/datasets/cuphead/train/images
 val: C:/Users/froze/OneDrive/Desktop/CS175/bots/datasets/cuphead/valid/images
 test: C:/Users/froze/OneDrive/Desktop/CS175/bots/datasets/cuphead/test/images
 
-nc: 13
-names: ['carrot', 'checkpoint', 'dirt', 'flag', 'onion_boss', 'pink_rain', 'player', 'player_progress', 'potato_boss', 'potato_icon', 'rain', 'ring', 'worm']
+nc: 21
+names: ['carrot', 'carrot_boss', 'carrot_icon', 'cuphead', 'dead', 'dirt', 'hp1', 'hp2', 'hp3', 'hp4', 'onion_boss', 'onion_icon', 'pink_rain', 'player', 'player_progress', 'potato_boss', 'potato_icon', 'rain', 'ring', 'win_results', 'worm']
 
 roboflow:
   workspace: cuphead-pj7jz
   project: cuphead-objects
-  version: 1
+  version: 5
   license: CC BY 4.0
-  url: https://universe.roboflow.com/cuphead-pj7jz/cuphead-objects/dataset/1
+  url: https://universe.roboflow.com/cuphead-pj7jz/cuphead-objects/dataset/5
