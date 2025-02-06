@@ -14,8 +14,6 @@ class CupheadEnv:
             0: ('a', 'left'),    # Move left
             1: ('d', 'right'),   # Move right
             2: ('k', 'jump'),    # Jump
-            3: ('s', 'duck'),    # Duck (added for completeness)
-            4: ('l', 'shoot')    # Shoot (added for completeness)
         }
         
         # Screen capture setup
