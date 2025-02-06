@@ -3,8 +3,8 @@ from ultralytics import YOLO
 
 def main():
 	model = YOLO("yolo11n.pt")  # Load a YOLOv11 pre-trained model or your custom model
-	# model.train(data="datasets/cuphead/data.yaml", epochs=50, imgsz=640, rect=True)
-	model.train(data="datasets/cuphead/data.yaml", imgsz=(1587, 918), epochs=400, rect=True)
+	# imgsz maintains the aspect ratio of the image. The images saved had this width
+	model.train(data="datasets/cuphead/data.yaml", imgsz=1587, epochs=400, rect=True)
 
 if __name__ == '__main__':
 	main()

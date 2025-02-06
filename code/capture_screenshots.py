@@ -8,7 +8,7 @@ import os
 # Configuration
 GAME_WINDOW_NAME = "Cuphead"
 SAVE_FOLDER = "datasets/cuphead/images"
-CAPTURE_INTERVAL = 2  # Seconds between screenshots
+CAPTURE_INTERVAL = 1  # Seconds between screenshots
 
 # Ensure save folder exists
 os.makedirs(SAVE_FOLDER, exist_ok=True)

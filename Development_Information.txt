@@ -1,7 +1,7 @@
 # Create a new .venv
 python -m venv .venv
 
-# Activate the virtual environment
+# Activate the virtual environment (instructions for windows)
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 .\.venv\Scripts\activate
 

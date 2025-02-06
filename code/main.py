@@ -4,6 +4,7 @@ import mss
 import pygetwindow as gw
 from ultralytics import YOLO
 import torch
+import time
 
 # Configuration
 GAME_WINDOW_NAME = "Cuphead"
@@ -27,18 +28,25 @@ def main():
 	region = get_game_window()
 
 	# once the model is trained we use this
-	model = YOLO("runs/detect/train2/weights/best.pt").to("cuda" if torch.cuda.is_available() else "cpu")
+	device = "cuda" if torch.cuda.is_available() else "cpu"
+	model = YOLO("runs/detect/train/weights/best.pt").to(device)
+
 	
 	# Ensure OpenCV reuses the window instead of opening new ones
 	cv2.namedWindow("Cuphead Detection", cv2.WINDOW_NORMAL)
-
+	count = 0
+	total = 0
 	while True:
 		# Capture and format screen
 		img = np.array(sct.grab(region), dtype=np.uint8)[:, :, :3]  # Ensure uint8
 		img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)  # Convert to BGR for OpenCV
 
 		# Run inference on GPU
+		start_time = time.time()
 		results = model(img, verbose=False)[0]
+		inference_time = time.time() - start_time
+		total += inference_time
+		count += 1
 		
 		# Process results
 		for result in results:
@@ -61,6 +69,7 @@ def main():
 		
 		# Check for exit key
 		if cv2.waitKey(1) & 0xFF == ord("q"):
+			print("Average:", total / count)
 			break
 
 	# Cleanup after exiting the loop
