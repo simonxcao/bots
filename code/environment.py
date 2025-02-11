@@ -147,11 +147,9 @@ class CupheadEnv:
 		"""Reset environment"""
 		# TODO: set last score to the position of the player_progress
 		self.last_score = 0
-		time.sleep(3)
+		time.sleep(3) # wait for three seconds for player_progress to reach its completion distance
 
 		pdi.press('z')  # Retry key
-		
-
 		
 
 		self.previous_state = None
