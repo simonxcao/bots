@@ -1,121 +1,143 @@
-# import cv2
-# import numpy as np
-# import mss
-# import pygetwindow as gw
-# from ultralytics import YOLO
-# import torch
-# import time
+import cv2
+import numpy as np
+import mss
+import pygetwindow as gw
+from ultralytics import YOLO
+import torch
+import time
+import threading
+
 from agent import DQNAgent
 from environment import CupheadEnv
 
-# Configuration
+# Configuration constants
 GAME_WINDOW_NAME = "Cuphead"
-CONFIDENCE_THRESHOLD = 0.5
+CONFIDENCE_THRESHOLD = 0.5  # Adjust as needed
 
-# def get_game_window():
-# 	try:
-# 		win = gw.getWindowsWithTitle(GAME_WINDOW_NAME)[0]
-# 		return {
-# 			"left": win.left,
-# 			"top": win.top,
-# 			"width": win.width,
-# 			"height": win.height
-# 		}
-# 	except IndexError:
-# 		raise Exception("Game window not found!")
+def get_game_window():
+    """
+    Find the game window by title and return its region as a dictionary.
+    """
+    try:
+        win = gw.getWindowsWithTitle(GAME_WINDOW_NAME)[0]
+        return {
+            "left": win.left,
+            "top": win.top,
+            "width": win.width,
+            "height": win.height
+        }
+    except IndexError:
+        raise Exception("Game window not found!")
 
-# def main():
-# 	sct = mss.mss()
-# 	region = get_game_window()
+def detection_loop():
+    """
+    Continuously capture the game window, run YOLO detection on the image,
+    and display the detections in a separate window.
+    """
+    # Create a screen capture instance
+    sct = mss.mss()
+    try:
+        region = get_game_window()
+    except Exception as e:
+        print(e)
+        return
 
-# 	# once the model is trained we use this
-# 	device = "cuda" if torch.cuda.is_available() else "cpu"
-# 	model = YOLO("runs/detect/train/weights/best.pt").to(device)
+    # Load the YOLO model on the appropriate device (GPU if available)
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    model = YOLO("runs/detect/train/weights/best.pt").to(device)
 
-	
-# 	# Ensure OpenCV reuses the window instead of opening new ones
-# 	cv2.namedWindow("Cuphead Detection", cv2.WINDOW_NORMAL)
-# 	count = 0
-# 	total = 0
-# 	while True:
-# 		# Capture and format screen
-# 		img = np.array(sct.grab(region), dtype=np.uint8)[:, :, :3]  # Ensure uint8
-# 		img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)  # Convert to BGR for OpenCV
+    # Create (or reuse) an OpenCV window for displaying detection results.
+    cv2.namedWindow("Cuphead Detection", cv2.WINDOW_NORMAL)
 
-# 		# Run inference on GPU
-# 		start_time = time.time()
-# 		results = model(img, verbose=False)[0]
-# 		inference_time = time.time() - start_time
-# 		total += inference_time
-# 		count += 1
-		
-# 		# Process results
-# 		for result in results:
-# 			boxes = result.boxes.xyxy.cpu().numpy()
-# 			confidences = result.boxes.conf.cpu().numpy()
-# 			class_ids = result.boxes.cls.cpu().numpy().astype(int)
-			
-# 			for box, conf, cls_id in zip(boxes, confidences, class_ids):
-# 				if conf > CONFIDENCE_THRESHOLD:
-# 					x1, y1, x2, y2 = map(int, box)
-# 					cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-# 					cv2.putText(img, 
-# 							f"{model.names[cls_id]} {conf:.2f}",
-# 							(x1, y1 - 10), 
-# 							cv2.FONT_HERSHEY_SIMPLEX, 
-# 							0.5, (0, 255, 0), 2)
-		
-# 		# Show the updated frame
-# 		cv2.imshow("Cuphead Detection", img)
-		
-# 		# Check for exit key
-# 		if cv2.waitKey(1) & 0xFF == ord("q"):
-# 			print("Average:", total / count)
-# 			break
+    count = 0
+    total_inference_time = 0.0
 
-# 	# Cleanup after exiting the loop
-# 	cv2.destroyAllWindows()
+    while True:
+        # Capture a frame of the game window
+        frame = np.array(sct.grab(region), dtype=np.uint8)[:, :, :3]
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
 
-# if __name__ == "__main__":
-# 	main()
+        # Run inference on the captured frame
+        start_time = time.time()
+        results = model(frame, verbose=False)[0]
+        inference_time = time.time() - start_time
+        total_inference_time += inference_time
+        count += 1
+
+        # Process results and draw bounding boxes and labels for detections
+        for result in results:
+            boxes = result.boxes.xyxy.cpu().numpy()
+            confidences = result.boxes.conf.cpu().numpy()
+            class_ids = result.boxes.cls.cpu().numpy().astype(int)
+            
+            for box, conf, cls_id in zip(boxes, confidences, class_ids):
+                if conf > CONFIDENCE_THRESHOLD:
+                    x1, y1, x2, y2 = map(int, box)
+                    cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    cv2.putText(frame,
+                                f"{model.names[cls_id]} {conf:.2f}",
+                                (x1, y1 - 10),
+                                cv2.FONT_HERSHEY_SIMPLEX,
+                                0.5, (0, 255, 0), 2)
+        
+        # Display the detection result in the window
+        cv2.imshow("Cuphead Detection", frame)
+
+        # Allow the user to press 'q' to exit the detection loop.
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            print("Average inference time:", total_inference_time / count)
+            break
+
+    cv2.destroyAllWindows()
+
 def train_rl():
-	# Initialize environment and agent
-	env = CupheadEnv()
-	state_size = len(env.get_state())  # Get state size from environment
-	action_size = len(env.action_map)
-	agent = DQNAgent(state_size, action_size)
-	
-	episodes = 1000
-	update_target_freq = 10
-	
-	for episode in range(episodes):
-		state = env.reset()
-		total_reward = 0
-		done = False
-		
-		while not done:
-			action = agent.act(state)
-			env.execute_action(action)
-			next_state = env.get_state()
-			reward = env.get_reward()
-			done = env.done
-			
-			agent.remember(state, action, reward, next_state, done)
-			agent.replay()
-			
-			# Update tracking variables
-			total_reward += reward
-			state = next_state
-			
-			# Epsilon decay
-			if agent.epsilon > agent.epsilon_min:
-				agent.epsilon *= agent.epsilon_decay
-		
-		# Update target network
-		if episode % update_target_freq == 0:
-			agent.update_target_model()
-		
-		print(f"Episode: {episode+1}, Total Reward: {total_reward:.2f}, Epsilon: {agent.epsilon:.2f}")
+    """
+    Train the RL agent to play the game.
+    This function assumes that the game is being displayed in its own window
+    (e.g., created/controlled by CupheadEnv).
+    """
+    # Initialize environment and agent
+    env = CupheadEnv()
+    state_size = len(env.get_state())  # Get state size from environment
+    action_size = len(env.action_map)
+    agent = DQNAgent(state_size, action_size)
+    
+    episodes = 1000
+    update_target_freq = 10
+    
+    for episode in range(episodes):
+        state = env.reset()
+        total_reward = 0
+        done = False
+        
+        while not done:
+            action = agent.act(state)
+            env.execute_action(action)
+            next_state = env.get_state()
+            reward = env.get_reward()
+            done = env.done
+            
+            agent.remember(state, action, reward, next_state, done)
+            agent.replay()
+            
+            total_reward += reward
+            state = next_state
+            
+            # Decay epsilon after each step
+            if agent.epsilon > agent.epsilon_min:
+                agent.epsilon *= agent.epsilon_decay
+        
+        # Update the target network periodically
+        if episode % update_target_freq == 0:
+            agent.update_target_model()
+        
+        print(f"Episode: {episode+1}, Total Reward: {total_reward:.2f}, Epsilon: {agent.epsilon:.2f}")
 
 if __name__ == "__main__":
-	train_rl()
+    # Start the detection loop in a separate daemon thread so that it
+    # runs concurrently with the RL training loop.
+    detection_thread = threading.Thread(target=detection_loop, daemon=True)
+    detection_thread.start()
+    
+    # Run the RL training loop in the main thread.
+    train_rl()
