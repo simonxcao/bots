@@ -5,11 +5,13 @@ from ultralytics import YOLO
 import cv2
 import mss
 import pygetwindow as gw
+import torch
 
 class CupheadEnv:
 	def __init__(self, model_path="runs/detect/train/weights/best.pt", 
 				game_window_name="Cuphead", action_delay=0.1):
 		# Game control parameters
+		self.done = False
 		self.action_delay = action_delay
 		self.action_map = {
 			0: ('a', 'left'),    # Move left
@@ -57,8 +59,6 @@ class CupheadEnv:
 		state = {
 			'player': None,
 			'enemies': [],
-			'projectiles': [],
-			'collectibles': []
 		}
 		
 		# Process detections
@@ -71,14 +71,15 @@ class CupheadEnv:
 				if class_name == 'player':
 					state['player'] = (x_center, y_center)
 				elif class_name in self.hps:
-					if int(class_name[2]) != self.current_health:
-						self.current_health = int(class_name[2])
+					new_health = int(class_name[2])
+					if new_health != self.current_health:
+						self.current_health = new_health
+						if self.current_health == 0:
+							self.done = True
 				elif class_name == 'player_progress':
-					# TODO: update reward for losing the final health
-					self.reset()
+					self.done = True
 				else:
 					state['enemies'].append((x_center, y_center))
-		
 		return self._vectorize_state(state)
 
 	def _vectorize_state(self, state_dict):
@@ -104,8 +105,7 @@ class CupheadEnv:
 			])
 		else:
 			vector.extend([0, 0])
-			
-		# Add more state features as needed
+		vector = [elem.cpu().item() if isinstance(elem, torch.Tensor) else elem for elem in vector]
 		return np.array(vector, dtype=np.float32)
 
 	def get_state(self):
@@ -145,15 +145,21 @@ class CupheadEnv:
 
 	def reset(self):
 		"""Reset environment"""
-		# TODO: set last score to the position of the player_progress
-		self.last_score = 0
-		time.sleep(3) # wait for three seconds for player_progress to reach its completion distance
-
-		pdi.press('z')  # Retry key
+		# Release shooting keys before retry
+		pdi.keyUp('w')
+		pdi.keyUp('j')
 		
+		self.done = False
+		time.sleep(5) # wait for five seconds for player_progress to reach its completion distance
+		pdi.press('z')  # Retry key
 
+		# Hold aim and shoot keys
+		pdi.keyDown('w')
+		pdi.keyDown('j')
+
+		self.current_health = 4
+		self.last_health = 4
 		self.previous_state = None
 		self.current_state = None
-		self.last_health = 4
-		self.survival_time = 0
+		# self.survival_time = 0
 		return self.get_state()

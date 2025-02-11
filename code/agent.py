@@ -13,6 +13,7 @@ class DQNAgent:
         self.epsilon_min = 0.01
         self.epsilon_decay = 0.995
         self.model = self._build_model()
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
         self.target_model = self._build_model()
         self.update_target_model()
 
@@ -56,9 +57,10 @@ class DQNAgent:
         target = rewards + (1 - dones.float()) * self.gamma * next_q
 
         loss = torch.nn.functional.mse_loss(current_q.squeeze(), target)
-        self.model.optimizer.zero_grad()
+        self.optimizer.zero_grad()
         loss.backward()
-        self.model.optimizer.step()
+        self.optimizer.step()
+        
 
     def save(self, name):
         torch.save(self.model.state_dict(), name)
