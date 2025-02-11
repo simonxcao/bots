@@ -1,12 +1,13 @@
-# Create a new .venv
-python -m venv .venv
+# Local Setup Instructions:
 
-# Activate the virtual environment (instructions for windows)
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
-.\.venv\Scripts\activate
+## install pipenv
+pip install pipenv
 
-# download all dependencies required
-pip install -r requirements.txt
+## activate environment
+pipenv shell
 
-# If you want to pip install a new dependency, update the requirements.txt after
-pip freeze > requirements.txt
+## when you want to install a package
+pipenv install pandas
+
+## when you want to install any missing packages in pipenv
+pipenv install
