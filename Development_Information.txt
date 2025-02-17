@@ -11,3 +11,6 @@ pipenv install pandas
 
 ## when you want to install any missing packages in pipenv
 pipenv install
+
+## when you want to load training from a saved path
+python main.py --load checkpoints/latest_agent.pth
