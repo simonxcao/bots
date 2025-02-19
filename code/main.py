@@ -114,42 +114,48 @@ def train_rl():
 	# Initialize agent with optional loading
 	agent = DQNAgent(state_size, action_size, load_path=args.load or CHECKPOINT_PATH)
 	
-	episodes = 1000
+	episodes = 1300
 	update_target_freq = 10
 	save_checkpoint_freq = 50  # Save every 50 episodes
+
+	log_file = "training_log.txt"
 	
-	for episode in range(episodes):
-		state = env.reset()
-		total_reward = 0
-		done = False
-		
-		while not done:
-			action = agent.act(state)
-			env.execute_action(action)
-			next_state = env.get_state()
-			reward = env.get_reward()
-			done = env.done
+	with open(log_file, "a") as f:
+		for episode in range(episodes):
+			state = env.reset()
+			total_reward = 0
+			done = False
 			
-			agent.remember(state, action, reward, next_state, done)
-			agent.replay()
+			while not done:
+				action = agent.act(state)
+				env.execute_action(action)
+				next_state = env.get_state()
+				reward = env.get_reward()
+				done = env.done
+				
+				agent.remember(state, action, reward, next_state, done)
+				agent.replay()
+				
+				total_reward += reward
+				state = next_state
+				
+				# Decay epsilon after each step
+				if agent.epsilon > agent.epsilon_min:
+					agent.epsilon *= agent.epsilon_decay
 			
-			total_reward += reward
-			state = next_state
+			# Update the target network periodically
+			if episode % update_target_freq == 0:
+				agent.update_target_model()
+				
+			# Save the model checkpoint
+			if episode % save_checkpoint_freq == 0:
+				agent.save(f"checkpoint_{episode}.pth")
+				print(f"Checkpoint saved at episode {episode}")
 			
-			# Decay epsilon after each step
-			if agent.epsilon > agent.epsilon_min:
-				agent.epsilon *= agent.epsilon_decay
-		
-		# Update the target network periodically
-		if episode % update_target_freq == 0:
-			agent.update_target_model()
-			
-		# Save the model checkpoint
-		if episode % save_checkpoint_freq == 0:
-			agent.save(f"checkpoint_{episode}.pth")
-			print(f"Checkpoint saved at episode {episode}")
-		
-		print(f"Episode: {episode+1}, Total Reward: {total_reward:.2f}, Epsilon: {agent.epsilon:.2f}")
+			# Log episode results
+			f.write(f"Episode: {episode+1}, Total Reward: {total_reward:.2f}, Epsilon: {agent.epsilon:.2f}\n")
+			f.flush()
+
 
 if __name__ == "__main__":
 	# Start the detection loop in a separate daemon thread so that it
