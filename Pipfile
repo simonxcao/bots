@@ -3,56 +3,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-[[source]]
-url = "https://download.pytorch.org/whl/cu118"
-verify_ssl = true
-name = "pytorch-cu118"
-
 [packages]
-certifi = "*"
-charset-normalizer = "*"
-colorama = "*"
-contourpy = "*"
-cycler = "*"
-filelock = "*"
-fonttools = "*"
-fsspec = "*"
-idna = "*"
-jinja2 = "*"
-kiwisolver = "*"
-markupsafe = "*"
-matplotlib = "*"
-mpmath = "*"
-mss = "*"
-networkx = "*"
-numpy = "*"
-opencv-python = "*"
-packaging = "*"
-pandas = "*"
-pillow = "*"
-psutil = "*"
-py-cpuinfo = "*"
-pydirectinput = "*"
-pygetwindow = "*"
-pyparsing = "*"
-pyrect = "*"
-python-dateutil = "*"
-pytz = "*"
-pyyaml = "*"
-requests = "*"
-scipy = "*"
-seaborn = "*"
-six = "*"
-sympy = "*"
-torch = {version = "*", index = "pytorch-cu118"}
-torchvision = {version = "*", index = "pytorch-cu118"}
-torchaudio = {version = "*", index = "pytorch-cu118"}
-tqdm = "*"
-typing-extensions = "*"
-tzdata = "*"
-ultralytics = "*"
-ultralytics-thop = "*"
-urllib3 = "*"
 
 [dev-packages]
 

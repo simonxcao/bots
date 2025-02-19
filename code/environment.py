@@ -35,6 +35,15 @@ class CupheadEnv:
 		self.last_health = 4
 		self.last_score = 0
 		self.survival_time = 0
+		
+		# Phase tracking
+		self.current_phase = 1
+		self.last_phase = 1
+		self.phase_transition_time = time.time()
+		
+		# Position tracking
+		self.optimal_x_pos = self.game_region['width'] * 0.6  # 60% of screen width
+		self.last_projectile_distance = float('inf')
 
 	def _get_game_window(self, window_name):
 		"""Helper to find game window coordinates"""
@@ -59,6 +68,8 @@ class CupheadEnv:
 		state = {
 			'player': None,
 			'enemies': [],
+			'projectiles': [],
+			'boss': None
 		}
 		
 		# Process detections
@@ -78,6 +89,17 @@ class CupheadEnv:
 							self.done = True
 				elif class_name == 'player_progress':
 					self.done = True
+				elif class_name == 'boss':
+					state['boss'] = (x_center, y_center)
+					# Update phase based on boss position/behavior
+					if y_center < self.game_region['height'] * 0.3:
+						self.current_phase = 3
+					elif y_center < self.game_region['height'] * 0.6:
+						self.current_phase = 2
+					else:
+						self.current_phase = 1
+				elif 'projectile' in class_name:
+					state['projectiles'].append((x_center, y_center))
 				else:
 					state['enemies'].append((x_center, y_center))
 		return self._vectorize_state(state)
@@ -132,20 +154,65 @@ class CupheadEnv:
 		"""Calculate reward based on state changes"""
 		reward = 0
 		
-		# Survival reward
-		reward += 0.05
+		# Base survival reward (reduced to emphasize other behaviors)
+		reward += 0.02
 		
-		# Health change penalty/reward
-		current_health = self.current_health
-		if current_health < self.last_health:
-			reward -= (self.last_health - current_health) * 20
-		self.last_health = current_health
-
-		# TODO 1: Adjust Statedict to separate enemies from projectiles (and maybe projectiles in each phase)
-		# TODO 2: Adjust _vectorize_state to account for projectiles
-		# TODO 3: Adjust get_reward to reward for distance from nearest projectile (to avoid it)
-		# TODO 4: Adjust get_reward to reward more in each phase to incentivise getting to next phase quicker
-		# TODO 5: Adjust get_reward to penalize going left when already at the edge of the screen (to speed up killing the boss)
+		# Phase progression rewards
+		if self.current_phase > self.last_phase:
+			phase_time = time.time() - self.phase_transition_time
+			phase_reward = {
+				2: 50,
+				3: 100
+			}.get(self.current_phase, 0)
+			
+			# Bonus for quick phase transitions (under 60 seconds)
+			if phase_time < 60:
+				phase_reward *= 1.5
+			
+			# Bonus for perfect phase transitions (no damage taken)
+			if self.current_health == self.last_health:
+				phase_reward *= 1.25
+				
+			reward += phase_reward
+			self.last_phase = self.current_phase
+			self.phase_transition_time = time.time()
+		
+		# Health change penalties (increased for later phases)
+		if self.current_health < self.last_health:
+			health_penalty = 20 * (1 + (self.current_phase - 1) * 0.5)
+			reward -= (self.last_health - self.current_health) * health_penalty
+		self.last_health = self.current_health
+		
+		# Positioning rewards
+		if self.current_state is not None and len(self.current_state) >= 2:
+			player_x = self.current_state[0] * self.game_region['width']
+			
+			# Reward for maintaining optimal attack position
+			distance_from_optimal = abs(player_x - self.optimal_x_pos)
+			position_reward = 0.1 * (1 - distance_from_optimal / self.game_region['width'])
+			reward += position_reward
+			
+			# Penalize being at screen edges when not dodging
+			if player_x < self.game_region['width'] * 0.1 or player_x > self.game_region['width'] * 0.9:
+				reward -= 0.1
+		
+		# Projectile avoidance rewards
+		if self.current_state is not None and len(self.current_state) >= 4:
+			nearest_projectile_x = self.current_state[2] * self.game_region['width']
+			nearest_projectile_y = self.current_state[3] * self.game_region['height']
+			
+			if nearest_projectile_x != 0 or nearest_projectile_y != 0:  # If projectile exists
+				player_x = self.current_state[0] * self.game_region['width']
+				player_y = self.current_state[1] * self.game_region['height']
+				
+				current_projectile_distance = ((player_x - nearest_projectile_x) ** 2 + 
+											(player_y - nearest_projectile_y) ** 2) ** 0.5
+				
+				# Reward for maintaining safe distance from projectiles
+				if current_projectile_distance > self.last_projectile_distance:
+					reward += 0.1 * (self.current_phase ** 0.5)  # Higher reward in later phases
+				
+				self.last_projectile_distance = current_projectile_distance
 		
 		return reward
 
@@ -167,5 +234,8 @@ class CupheadEnv:
 		self.last_health = 4
 		self.previous_state = None
 		self.current_state = None
-		# self.survival_time = 0
+		self.current_phase = 1
+		self.last_phase = 1
+		self.phase_transition_time = time.time()
+		self.last_projectile_distance = float('inf')
 		return self.get_state()
