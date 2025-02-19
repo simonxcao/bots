@@ -13,4 +13,26 @@ pipenv install pandas
 pipenv install
 
 ## when you want to load training from a saved path
-python main.py --load checkpoints/latest_agent.pth
+python main.py --load latest_agent.pth
+
+## after a lot of eps, I rename it the last save to "checkpoint_(#)_session(num of eps completed in the session)"
+## for example checkpoint_1st is first 950 episodes, checkpoint_2nd is 650 more episodes after 950 episodes (1600 episodes total)
+
+# Since we don't have data recorded from earlier sessions, we need to run from no checkpoint and then run from each session
+# run them each for a bit to recreate similar data to the real sessions for plotting purposes to roughly gather the improvement
+# over each episode
+
+
+# More setup information for locally running agent
+# change keybinds to the following:
+self.action_map = {
+			0: ('a', 'left'),    # Move left
+			1: ('d', 'right'),   # Move right
+			2: ('l', 'jump'),    # Jump
+			3: ('z', 'retry'), 	 # Retry agent may choose this as well while alive which is a nice way to choose no action
+		}
+
+# for best object detection, set resolution to 1600x900 windowed
+# if you have one monitor and run main.py you can click on the new screen showing the object detecion and press q to close it
+# if you have two monitors, make sure to click into the game after starting main.py so the agent inputs will register
+# on your second monitor you should see a copy of the game screen but with live object detection boxes shown on top

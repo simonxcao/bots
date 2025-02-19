@@ -17,7 +17,7 @@ class CupheadEnv:
 			0: ('a', 'left'),    # Move left
 			1: ('d', 'right'),   # Move right
 			2: ('l', 'jump'),    # Jump
-			3: ('z', 'retry'), 	 # Retry agent may choose this as well while alive which is a nice way to choose no action
+			3: ('e', 'nothing'), 	 # agent presses a key that does nothing
 		}
 		
 		# Screen capture setup
@@ -120,13 +120,14 @@ class CupheadEnv:
 		"""Execute game action with proper timing"""
 		key, action_type = self.action_map[action]
 		
-		if action_type in ['left', 'right']:
+		# tbh I don't think this makes a difference to hold down for 0.1s vs just tapping. Should fix if we redo agent
+		if action_type in ['left', 'right']: 	# move left or right for full action delay period (0.1s)
 			pdi.keyDown(key)
 			time.sleep(self.action_delay)
 			pdi.keyUp(key)
-		else:
+		else:									# perform small jump/parry (since it isn't held down) or do nothing until next action
 			pdi.press(key)
-			time.sleep(self.action_delay)
+			time.sleep(self.action_delay) 
 
 	def get_reward(self):
 		"""Calculate reward based on state changes"""

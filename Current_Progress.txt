@@ -1,1 +1,8 @@
-Need to save model
+Implement TODOs in environment.py or make any adjustments that can improve the reward system for the RL agent.
+I need to retrain, but the agent was struggling on the 2nd phase of the boss (out of 3) after 1200 runs.
+I will retrain tonight to get to nearly 2000 and see if it can at least get half way through the 2nd phase
+# TODO 1: Adjust Statedict to separate enemies from projectiles (and maybe projectiles in each phase)
+# TODO 2: Adjust _vectorize_state to account for projectiles
+# TODO 3: Adjust get_reward to reward for distance from nearest projectile (to avoid it)
+# TODO 4: Adjust get_reward to reward more in each phase to incentivise getting to next phase quicker
+# TODO 5: Adjust get_reward to penalize going left when already at the edge of the screen (to speed up killing the boss)

@@ -114,7 +114,7 @@ def train_rl():
 	# Initialize agent with optional loading
 	agent = DQNAgent(state_size, action_size, load_path=args.load or CHECKPOINT_PATH)
 	
-	episodes = 5000
+	episodes = 1000
 	update_target_freq = 10
 	save_checkpoint_freq = 50  # Save every 50 episodes
 	
