@@ -1,0 +1,76 @@
+<!-- Just testing some things, no need to use this -->
+<!-- -Andrew -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/custom.css">
+    <title>Document</title>
+</head>
+<body>
+
+    <hr>
+
+    <center>
+    <img src=assets/cuphead_cover_art.jpeg alt='Cuphead cover art' style="width:200px;height:200px;">
+    </center>
+    
+    
+    <h3>Summary</h3>
+    <p>Our project involves training a reinforcement learning agent to play the game *Cuphead*. We use a YOLO object detection model to read the contents of the screen, and trained an RL network to make decisions and key inputs based on what is seen by the model. Our goal is to beat one boss fight (root pack).</p>
+    
+    
+    <center>
+    <img src = assets/CUPHEAD_RL.png alt='Cuphead AI image' style="width:250px;height:200px;text-align: center;">
+    </center>
+    
+    
+    
+    <h3>Reports</h3>
+    <ul>
+        <li><a href="proposal.html">Proposal</a></li>
+        <li><a href="status.html">Status</a></li>
+        <li><a href="final.html">Final</a></li>
+    </ul>
+
+    
+    
+    <h3>Source code:</h3>
+    <p><a href=https://github.com/simonxcao/bots>https://github.com/simonxcao/bots</a></p>
+    
+    <hr>
+    
+    <h3>Sources<br></h3>
+    <ul>
+     <li><p>Our main inspiration and motivation to do this project was this YouTube videio by Develeper, which showed a functioning Cuphead agent. This video has some differences to our project such as their agent training on a very different boss, and their agent using tensorflow, while we used pytorch. Still, the video gave us inspiration of using an object detection model and training RL agent to output keypresses based on the locations of objects that the model sees.<br>
+     <a href=https://www.youtube.com/watch?v=wipq--gdIGM>https://www.youtube.com/watch?v=wipq--gdIGM</a>
+     <img src=assets/video_screenshot.jpg alt='video thumbnail' style="width:500px;height:200px;">
+     </p></li>
+
+     <li><p>
+     - This is another video that we found helpful. It talks about object detection models in the game *Grand Theft Auto*.<br>
+     <a href=https://www.youtube.com/watch?v=hNv854R1Guo>https://www.youtube.com/watch?v=hNv854R1Guo</a>
+    </p></li>   
+
+    <li><p>
+     - This page was helpful in creating the object detection model. <br>
+     <a href=https://docs.ultralytics.com/models/yolo11>https://docs.ultralytics.com/models/yolo11/</a>
+    </p></li>  
+
+    <li><p>
+     - We also created our own Cuphead dataset for object detection here:<br>
+     <a href=https://app.roboflow.com/cuphead-pj7jz/cuphead-objects/6>https://app.roboflow.com/cuphead-pj7jz/cuphead-objects/6</a>
+    </p></li>
+    </ul>
+    
+    
+    
+    
+    
+    
+
+
+</body>
+</html>
