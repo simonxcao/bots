@@ -34,14 +34,12 @@ Input Layer (4 neurons) → Dense(128) + ReLU → Dense(64) + ReLU → Output La
 
 The network optimizes the Q-learning objective:
 
-$$
-L(\theta) = \mathbb{E}_{(s,a,r,s')\sim D} \left[(r + \gamma \max_{a'} Q(s', a'; \theta^-) - Q(s,a;\theta))^2\right]
-$$
+L(θ) = E_{(s,a,r,s') ∼ D} [(r + γ max_{a'} Q(s', a'; θ^-) - Q(s,a;θ))²]
 
 where:
-- $\theta$: Current network parameters
-- $\theta^-$: Target network parameters
-- $\gamma$: Discount factor (0.95)
+- θ: Current network parameters
+- θ^-: Target network parameters
+- γ: Discount factor (0.95)
 - D: Experience replay buffer (size: 10,000)
 
 Action Space:
