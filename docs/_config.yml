@@ -9,6 +9,8 @@ subtitle: 'CS 175: Project in AI'
 # more settings
 
 markdown: kramdown
+kramdown:
+  math_engine: mathjax
 
 exclude:
 - README.md
