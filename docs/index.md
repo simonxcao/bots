@@ -6,7 +6,9 @@ title:  Home
 <hr>
 
 <center>
-<img src=assets/cuphead_cover_art.jpeg alt='Cuphead cover art' style="width:200px;height:200px;">
+
+![Cuphead Cover Art](assets/cuphead_cover_art.jpeg){: width="300" }
+
 </center>
 
 
@@ -16,9 +18,8 @@ Our project involves training a reinforcement learning agent to play the game *C
 
 <center>
 
-<!-- ![Cuphead AI Image](assets/CUPHEAD_RL.png) -->
+![Cuphead AI Image](assets/CUPHEAD_RL.png){: width="300" }
 
-<img src = assets/CUPHEAD_RL.png alt='Cuphead AI image' width=250px >
 </center>
 
 
@@ -38,7 +39,7 @@ https://github.com/simonxcao/bots
 
 - Our main inspiration and motivation to do this project was this YouTube videio by Develeper, which showed a functioning Cuphead agent. This video has some differences to our project such as their agent training on a very different boss, and their agent using tensorflow, while we used pytorch. Still, the video gave us inspiration of using an object detection model and training RL agent to output keypresses based on the locations of objects that the model sees. 
  https://www.youtube.com/watch?v=wipq--gdIGM
- <img src=assets/video_screenshot.jpg alt='video thumbnail' style="width:500px;height:200px;">
+ ![Video Thumbnail](assets/video_screenshot.jpg)
 
  - This is another video that we found helpful. It talks about object detection models in the game *Grand Theft Auto*.
  https://www.youtube.com/watch?v=hNv854R1Guo
