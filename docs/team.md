@@ -6,11 +6,11 @@ title:  Team
 # {{ page.title }}
 
 
-## USER 1
+## Simon Cao
 ***UCI Net ID***: tcao10
 
-## USER 2
+## Alex Brown
 ***UCI Net ID***: ucinetid2
 
-## USER 3
+## Andrew Peterson
 ***UCI Net ID***: ucinetid3
