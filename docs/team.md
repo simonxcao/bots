@@ -10,7 +10,7 @@ title:  Team
 ***UCI Net ID***: tcao10
 
 ## Alex Brown
-***UCI Net ID***: ucinetid2
+***UCI Net ID***: alexajb2
 
 ## Andrew Peterson
-***UCI Net ID***: ucinetid3
+***UCI Net ID***: ajpeter2
