@@ -19,12 +19,12 @@ We utilize the YOLO (You Only Look Once) object detection model for real-time ga
 
 The detection results are normalized and vectorized into a state representation suitable for the reinforcement learning agent:
 
-\[
+$$
 s_t = \begin{bmatrix} 
 \frac{x_{player}}{w_{screen}} & \frac{y_{player}}{h_{screen}} & 
 \frac{x_{nearest\_enemy} - x_{player}}{w_{screen}} & \frac{y_{nearest\_enemy} - y_{player}}{h_{screen}}
 \end{bmatrix}
-\]
+$$
 
 ### Stage 2: Deep Q-Learning Network (Action Selection)
 We implement a Deep Q-Network (DQN) with the following architecture:
@@ -34,14 +34,14 @@ Input Layer (4 neurons) → Dense(128) + ReLU → Dense(64) + ReLU → Output La
 
 The network optimizes the Q-learning objective:
 
-\[
+$$
 L(\theta) = \mathbb{E}_{(s,a,r,s')\sim D} \left[(r + \gamma \max_{a'} Q(s', a'; \theta^-) - Q(s,a;\theta))^2\right]
-\]
+$$
 
 where:
-- \(\theta\): Current network parameters
-- \(\theta^-\): Target network parameters
-- \(\gamma\): Discount factor (0.95)
+- $\theta$: Current network parameters
+- $\theta^-$: Target network parameters
+- $\gamma$: Discount factor (0.95)
 - D: Experience replay buffer (size: 10,000)
 
 Action Space:
