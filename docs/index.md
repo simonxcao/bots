@@ -7,7 +7,7 @@ title:  Home
 
 <center>
 
-![Cuphead Cover Art](assets/cuphead_cover_art.jpeg){: width="300" }
+![Cuphead Cover Art](assets/cuphead_cover_art.jpeg)
 
 </center>
 
@@ -18,7 +18,7 @@ Our project involves training a reinforcement learning agent to play the game *C
 
 <center>
 
-![Cuphead AI Image](assets/CUPHEAD_RL.png){: width="300" }
+![Cuphead AI Image](assets/CUPHEAD_RL.png)
 
 </center>
 
