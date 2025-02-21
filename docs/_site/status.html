@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <title>RL Cuphead: Status</title>
+
+  <!-- Bootstrap -->
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+    integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+  <!-- MathJax -->
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+  <link rel="stylesheet" href="/css/custom.css">
+</head>
+
+<body>
+
+  
+  
+  
+  
+  
+  <!--h1>/</h1-->
+  
+  
+  
+  
+  <!--h1>/proposal.html</h1-->
+  
+  
+  
+  
+  <!--h1>/status.html</h1-->
+  
+  
+  
+  
+  <!--h1>/team.html</h1-->
+  
+  
+  
+  
+  <!--h2></h2-->
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+          aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <span class="navbar-brand" style="pointer-events:none;">RL Cuphead</span>
+      </div>
+      <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li class=""><a
+              href="index.html">Home</a></li>
+          <li class=""><a
+              href="proposal.html">Proposal</a></li>
+          <li class=" active "><a
+              href="status.html">Status</a></li>
+          <li class="disabled"><a
+              href="final.html">Final</a></li>
+          <li class=""><a href="team.html">Team Details</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h2>
+        RL Cuphead
+        <small>CS 175: Project in AI</small>
+      </h2>
+    </div>
+
+
+    <h2 id="project-summary">Project Summary</h2>
+<p>Our project focuses on developing an AI agent capable of defeating a Cuphead boss using deep reinforcement learning. Our method utilizes a two-stage machine learning approach: first, a computer vision component using YOLO (You Only Look Once) for real-time object detection and game state understanding, which is then followed by a deep Q-learning network (DQN) for action decision making. We would have to manually start the game and load up the level, but the agent would take over from there. The agent processes raw gameplay images to identify critical elements such as the player character, boss, projectiles, and health indicators, then uses this information to make optimal decisions for movement and dodging. Currently, our agent has demonstrated significant progress, reaching the third phase of the boss fight after 3500 training runs, showing promising potential for achieving complete victory with further optimization.</p>
+
+<h2 id="approach">Approach</h2>
+<p>Our solution combines state-of-the-art computer vision with reinforcement learning, implemented through a dual-stage pipeline:</p>
+
+<h3 id="stage-1-computer-vision-state-recognition">Stage 1: Computer Vision (State Recognition)</h3>
+<p>We utilize the YOLO (You Only Look Once) object detection model for real-time game state understanding. The model processes game frames to detect and classify. We also had to label the data manually in order to train the YOLO recognition model such as labeling the character, bosses, projectiles, and health indicators:</p>
+<ul>
+  <li>Player character position</li>
+  <li>Boss position and state</li>
+  <li>Projectiles and hazards</li>
+  <li>Health indicators</li>
+  <li>Progress indicators</li>
+</ul>
+
+<p>The detection results are normalized and vectorized into a state representation suitable for the reinforcement learning agent:</p>
+
+\[s_t = \begin{bmatrix} 
+\frac{x_{player}}{w_{screen}} &amp; \frac{y_{player}}{h_{screen}} &amp; 
+\frac{x_{nearest\_enemy} - x_{player}}{w_{screen}} &amp; \frac{y_{nearest\_enemy} - y_{player}}{h_{screen}}
+\end{bmatrix}\]
+
+<h3 id="stage-2-deep-q-learning-network-action-selection">Stage 2: Deep Q-Learning Network (Action Selection)</h3>
+<p>We implement a Deep Q-Network (DQN) with the following architecture:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Input Layer (4 neurons) → Dense(128) + ReLU → Dense(64) + ReLU → Output Layer (4 actions)
+</code></pre></div></div>
+
+<p>The network optimizes the Q-learning objective:</p>
+
+<p>L(θ) = E_{(s,a,r,s’) ∼ D} [(r + γ max_{a’} Q(s’, a’; θ^-) - Q(s,a;θ))²]</p>
+
+<p>where:</p>
+<ul>
+  <li>θ: Current network parameters</li>
+  <li>θ^-: Target network parameters</li>
+  <li>γ: Discount factor (0.95)</li>
+  <li>D: Experience replay buffer (size: 10,000)</li>
+</ul>
+
+<p>Action Space:</p>
+<ul>
+  <li>Move left</li>
+  <li>Move right</li>
+  <li>Jump</li>
+  <li>No action</li>
+</ul>
+
+<p>Hyperparameters:</p>
+<ul>
+  <li>Learning rate: 0.001 (Adam optimizer)</li>
+  <li>Epsilon: 1.0 → 0.01 (decay rate: 0.995)</li>
+  <li>Batch size: 32</li>
+  <li>Action delay: 0.1s</li>
+</ul>
+
+<p>Reward Structure:</p>
+<ol>
+  <li>Base survival reward: +0.02 per timestep</li>
+  <li>Health-based penalties:
+    <ul>
+      <li>Base penalty: -20 per health point lost</li>
+      <li>Phase multiplier: penalty * (1 + (phase - 1) * 0.5)</li>
+    </ul>
+  </li>
+  <li>Phase progression rewards:
+    <ul>
+      <li>Phase 1 → 2: +50</li>
+      <li>Phase 2 → 3: +100</li>
+      <li>Quick transition bonus (&lt; 60s): 1.5x</li>
+      <li>Perfect transition bonus (no damage): 1.25x</li>
+    </ul>
+  </li>
+  <li>Positioning rewards:
+    <ul>
+      <li>Optimal position maintenance: +0.1 * (1 - distance_from_optimal/screen_width)</li>
+      <li>Edge penalty: -0.1 when too close to screen edges</li>
+    </ul>
+  </li>
+  <li>Projectile avoidance:
+    <ul>
+      <li>Dynamic reward based on distance increase from projectiles</li>
+      <li>Scaled by phase: 0.1 * sqrt(current_phase)</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="evaluation">Evaluation</h2>
+
+<h3 id="quantitative-metrics">Quantitative Metrics</h3>
+
+<ol>
+  <li><strong>Training Progress</strong>
+    <ul>
+      <li>Current achievement: Reached Phase 3 in 3,500 runs</li>
+      <li>Baseline comparison: Random agent (&lt;25% boss health depletion)</li>
+      <li>Current performance: ~60% boss health depletion</li>
+      <li>Average survival time: Increasing trend (graph to be added)</li>
+    </ul>
+  </li>
+  <li><strong>Health Management</strong>
+    <ul>
+      <li>Starting health: 4 points</li>
+      <li>Average health at phase transitions:
+        <ul>
+          <li>Phase 1 → 2: 1.7 health points</li>
+          <li>Phase 2 → 3: 1.2 health points</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Phase Progression</strong>
+    <ul>
+      <li>Average time to reach Phase 2: 85 seconds</li>
+      <li>Average time to reach Phase 3: 170 seconds</li>
+      <li>Success rate reaching Phase 2: 60%</li>
+      <li>Success rate reaching Phase 3: 10%</li>
+    </ul>
+  </li>
+  <li><strong>Reward Progress</strong>
+    <ul>
+      <li>Reward results over time over different models being trained:</li>
+      <li>-60 to -50 is the gradual progress</li>
+      <li>reason for this is because the reward function is not optimized yet and we aren’t rewarding the agent for surviving more and performing more optimal actions</li>
+      <li>add graph here</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="qualitative-analysis">Qualitative Analysis</h3>
+
+<ol>
+  <li><strong>Behavioral Improvements</strong>
+    <ul>
+      <li>Developed consistent dodging patterns for common projectiles</li>
+      <li>Learned to maintain optimal attack position</li>
+      <li>Shows adaptation to different boss phases</li>
+      <li>Demonstrates emergent strategies for health preservation</li>
+    </ul>
+  </li>
+  <li><strong>Learning Challenges</strong>
+    <ul>
+      <li>Initial difficulty with edge case projectile patterns</li>
+      <li>Occasional suboptimal positioning in Phase 3</li>
+      <li>Room for improvement in phase transition strategies</li>
+    </ul>
+  </li>
+  <li><strong>Visualization</strong>
+(Screenshots and performance graphs to be added showing:)
+    <ul>
+      <li>Object detection overlay</li>
+      <li>Action probability distributions</li>
+      <li>Reward accumulation over time</li>
+      <li>Phase progression success rates</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="remaining-goals-and-challenges">Remaining Goals and Challenges</h2>
+
+<p>Our prototype, while showing promising results in reaching the third phase of the boss fight, still has several limitations and challenges we aim to address in the remainder of the quarter:</p>
+
+<h3 id="reward-system-optimization">Reward System Optimization</h3>
+<p>The current reward system, while functional, needs significant refinement. Our agent’s average reward of -60 to -50 indicates that the reward structure isn’t effectively encouraging optimal behavior. We plan to:</p>
+<ol>
+  <li>Implement a more nuanced phase-based reward system that better reflects the increasing difficulty</li>
+  <li>Add specific rewards for successful dodge patterns</li>
+  <li>Develop a more sophisticated positioning reward that accounts for both attack opportunities and safety</li>
+</ol>
+
+<h3 id="evaluation-depth">Evaluation Depth</h3>
+<p>While we have basic metrics, we need more comprehensive evaluation to truly understand our agent’s performance:</p>
+<ol>
+  <li>Implement detailed tracking of action distributions per phase</li>
+  <li>Compare performance against human players of varying skill levels</li>
+  <li>Analyze failure cases to identify patterns in unsuccessful runs</li>
+  <li>Create visualization tools for real-time decision-making process</li>
+</ol>
+
+<h3 id="technical-challenges">Technical Challenges</h3>
+<p>Several technical hurdles remain:</p>
+<ol>
+  <li><strong>Frame Processing Speed</strong>: Our current YOLO implementation occasionally causes frame drops, which can affect the agent’s performance. We’re investigating optimization techniques and may need to simplify our object detection model.</li>
+  <li><strong>State Space Complexity</strong>: The current state representation might be too simplified for the complex patterns in Phase 3. We’re considering expanding the state space to include historical data for better pattern recognition.</li>
+  <li><strong>Action Timing</strong>: The fixed 0.1s action delay might be suboptimal for certain scenarios since the agent isn’t able to chain together actions and hence not react optimal enough to the game. We plan to experiment with dynamic action timing based on the game state.</li>
+</ol>
+
+<h3 id="anticipated-obstacles">Anticipated Obstacles</h3>
+<ol>
+  <li><strong>Computational Resources</strong>: Training with an expanded state space and more sophisticated reward system will require significantly more computational resources. We may need to optimize our code or seek additional GPU resources.</li>
+  <li><strong>Overfitting Concerns</strong>: As we fine-tune the reward system, there’s a risk of overfitting to specific boss patterns. We’ll need to ensure our agent maintains adaptability.</li>
+  <li><strong>Time Constraints</strong>: Implementing and testing all planned improvements within the quarter will be challenging. We’ve prioritized our goals and will focus on the most impactful changes first.</li>
+</ol>
+
+<h2 id="resources-used">Resources Used</h2>
+
+<h3 id="development-tools-and-libraries">Development Tools and Libraries</h3>
+<ul>
+  <li><strong>PyTorch</strong>: Primary framework for implementing the DQN</li>
+  <li><strong>Ultralytics YOLO</strong>: Object detection and tracking</li>
+  <li><strong>OpenCV (cv2)</strong>: Image processing and frame capture</li>
+  <li><strong>MSS</strong>: Screen capture functionality</li>
+  <li><strong>PyDirectInput</strong>: Game control interface</li>
+  <li><strong>NumPy</strong>: Numerical computations and array operations</li>
+  <li><strong>PyGetWindow</strong>: Window management for game interaction</li>
+</ul>
+
+<h3 id="aiml-resources">AI/ML Resources</h3>
+<ul>
+  <li><strong>YOLO Documentation</strong>: <a href="https://docs.ultralytics.com/">https://docs.ultralytics.com/</a></li>
+  <li><strong>DQN Implementation Reference</strong>: <a href="https://stable-baselines3.readthedocs.io/">Stable Baselines3 Documentation</a></li>
+  <li><strong>Research Papers</strong>:
+    <ul>
+      <li>“Playing Atari with Deep Reinforcement Learning” (Mnih et al., 2013)</li>
+      <li>“Human-level control through deep reinforcement learning” (Nature, 2015)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="training-data-and-labeling">Training Data and Labeling</h3>
+<ul>
+  <li><strong>Roboflow</strong>: Used for annotating game frames and managing training datasets</li>
+  <li><strong>LabelImg</strong>: Additional tool for manual image labeling</li>
+  <li>Manually collected ~1000 labeled frames for YOLO training</li>
+</ul>
+
+<h3 id="code-references-and-documentation">Code References and Documentation</h3>
+<ul>
+  <li>StackOverflow: Various threading and performance optimization solutions</li>
+  <li>PyTorch Forums: DQN implementation discussions</li>
+</ul>
+
+<h3 id="ai-tools-used">AI Tools Used</h3>
+<ul>
+  <li><strong>GitHub Copilot</strong>: Assisted with code completion and debugging</li>
+  <li><strong>ChatGPT</strong>: Used for:
+    <ul>
+      <li>Debugging code issues</li>
+      <li>Optimizing reward function structure</li>
+      <li>Discussing implementation approaches</li>
+      <li>Documentation writing</li>
+    </ul>
+  </li>
+  <li><strong>Claude</strong>: Used for:
+    <ul>
+      <li>Code review and optimization suggestions</li>
+      <li>Architectural decisions</li>
+      <li>Documentation improvements</li>
+    </ul>
+  </li>
+  <li><strong>DeepSeek Coder</strong>: Used for:
+    <ul>
+      <li>Code review and optimization suggestions</li>
+      <li>Architectural decisions</li>
+      <li>Documentation improvements</li>
+    </ul>
+  </li>
+</ul>
+
+
+  </div><!-- /.container -->
+
+  <footer class="footer">
+    <div class="container">
+      <p class="text-muted">Website created as part of the <a href="https://royf.org/crs/CS175/W25">CS 175 (W25):
+          Project in Artificial Intelligence</a> course.</p>
+    </div>
+  </footer>
+
+</body>
+
+</html>
