@@ -9,22 +9,22 @@ title:  Home
 
 
 
+
 **Summary**
 Our project involves training a reinforcement learning (RL) agent to play the game *Cuphead*, specifically to defeat the Root Pack boss fight. We use a YOLO object detection model to analyze the game's screen in real-time, then feed the data through a DQN which learns to make optimal decisions and execute inputs based on the observed state of the game. The project aims to explore the challenges of training AI in fast-paced, visually complex environments such as video games.
 
-![Cuphead AI Image](assets/CUPHEAD_RL.png){: width="300"}
-
-
-
+**Source code:** 
+[https://github.com/simonxcao/bots](https://github.com/simonxcao/bots)
 
 **Reports:**
  - [Proposal](proposal.html) 
  - [Status](status.html) 
  - [Final](final.html) 
+ 
+
+![Cuphead AI Image](assets/CUPHEAD_RL.png){: width="300"}
 
 
-**Source code:** 
-[https://github.com/simonxcao/bots](https://github.com/simonxcao/bots)
 
 <hr>
 
