@@ -34,7 +34,7 @@ Input Layer (4 neurons) → Dense(128) + ReLU → Dense(64) + ReLU → Output La
 
 The network optimizes the Q-learning objective:
 
-L(θ) = E_{(s,a,r,s') ∼ D} [(r + γ max_{a'} Q(s', a'; θ^-) - Q(s,a;θ))²]
+$$L(θ) = E_{(s,a,r,s') ∼ D} [(r + γ max_{a'} Q(s', a'; θ^-) - Q(s,a;θ))²]$$
 
 where:
 - θ: Current network parameters
@@ -98,8 +98,9 @@ Reward Structure:
 4. **Reward Progress**
 - Reward results over time over different models being trained:
 - -60 to -50 is the gradual progress
-- reason for this is because the reward function is not optimized yet and we aren't rewarding the agent for surviving more and performing more optimal actions
-- add graph here
+- Reason for this is because the reward function is not optimized yet and we aren't rewarding the agent for surviving more and performing more optimal actions
+- This graph plots average total rewards across 25 episode segments. An episode is a singular run of the boss battle, and the total reward was calculated from positive rewards for time survived and negative rewards each life lost. Episode rewards were not initially recorded, though model checkpoints were periodically saved. To approximate the full training curve, a separate program later captured rewards from loading the model at earlier checkpoints.
+![RL reward Graph](assets/CupheadAI_training_curve.png){: height="400" }
 
 ### Qualitative Analysis
 

@@ -40,8 +40,10 @@ Our project involves training a reinforcement learning (RL) agent to play the ga
 
  - This page was helpful in creating the object detection model. <br>
  [https://docs.ultralytics.com/models/yolo11/](https://docs.ultralytics.com/models/yolo11/)
- - We also created our own Cuphead dataset for object detection here:<br>
+ - We also created our own Cuphead dataset for object detection. This was used to train the YOLO object detection model The dataset can be found here:<br>
  [https://app.roboflow.com/cuphead-pj7jz/cuphead-objects/6](https://app.roboflow.com/cuphead-pj7jz/cuphead-objects/6)
+ <br>
+ ![Object Detection Example](assets/object_detection_example.png){: height="300"}
  
 
 
