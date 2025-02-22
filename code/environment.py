@@ -141,13 +141,6 @@ class CupheadEnv:
 		if current_health < self.last_health:
 			reward -= (self.last_health - current_health) * 20
 		self.last_health = current_health
-
-		# TODO 1: Adjust Statedict to separate enemies from projectiles (and maybe projectiles in each phase)
-		# TODO 2: Adjust _vectorize_state to account for projectiles
-		# TODO 3: Adjust get_reward to reward for distance from nearest projectile (to avoid it)
-		# TODO 4: Adjust get_reward to reward more in each phase to incentivise getting to next phase quicker
-		# TODO 5: Adjust get_reward to penalize going left when already at the edge of the screen (to speed up killing the boss)
-		
 		return reward
 
 	def reset(self):

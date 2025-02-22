@@ -2,6 +2,7 @@
 layout: default
 title: Status
 ---
+[![Video Title](https://img.youtube.com/vi/KRJi6SxBO2w/0.jpg)](https://www.youtube.com/watch?v=KRJi6SxBO2w)
 
 ## Project Summary
 Our project focuses on developing an AI agent capable of defeating a Cuphead boss using deep reinforcement learning. Our method utilizes a two-stage machine learning approach: first, a computer vision component using YOLO (You Only Look Once) for real-time object detection and game state understanding, which is then followed by a deep Q-learning network (DQN) for action decision making. We would have to manually start the game and load up the level, but the agent would take over from there. The agent processes raw gameplay images to identify critical elements such as the player character, boss, projectiles, and health indicators, then uses this information to make optimal decisions for movement and dodging. Currently, our agent has demonstrated significant progress, reaching the third phase of the boss fight after 3500 training runs, showing promising potential for achieving complete victory with further optimization.
