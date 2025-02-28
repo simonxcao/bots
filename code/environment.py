@@ -161,5 +161,4 @@ class CupheadEnv:
 		self.last_health = 4
 		self.previous_state = None
 		self.current_state = None
-		# self.survival_time = 0
 		return self.get_state()

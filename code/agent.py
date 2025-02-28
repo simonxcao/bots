@@ -4,6 +4,8 @@ import random
 import os
 from collections import deque
 
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class DQNAgent:
 	def __init__(self, state_size, action_size, load_path=None):
 		self.state_size = state_size
@@ -11,7 +13,7 @@ class DQNAgent:
 		self.memory = deque(maxlen=10000)
 		self.gamma = 0.95
 		self.epsilon = 1.0
-		self.epsilon_min = 0.01 
+		self.epsilon_min = 0.01
 		self.epsilon_decay = 0.995
 		self.model = self._build_model()
 		self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
@@ -29,7 +31,7 @@ class DQNAgent:
 			torch.nn.ReLU(),
 			torch.nn.Linear(64, self.action_size)
 		)
-		return model
+		return model.to(device)
 
 	def update_target_model(self):
 		self.target_model.load_state_dict(self.model.state_dict())
@@ -40,7 +42,7 @@ class DQNAgent:
 	def act(self, state):
 		if np.random.rand() <= self.epsilon:
 			return random.randrange(self.action_size)
-		state = torch.FloatTensor(state).unsqueeze(0)
+		state = torch.FloatTensor(state).unsqueeze(0).to(device)
 		with torch.no_grad():
 			act_values = self.model(state)
 		return torch.argmax(act_values[0]).item()
@@ -50,11 +52,11 @@ class DQNAgent:
 			return
 		
 		minibatch = random.sample(self.memory, batch_size)
-		states = torch.FloatTensor(np.array([t[0] for t in minibatch]))
-		actions = torch.LongTensor(np.array([t[1] for t in minibatch]))
-		rewards = torch.FloatTensor(np.array([t[2] for t in minibatch]))
-		next_states = torch.FloatTensor(np.array([t[3] for t in minibatch]))
-		dones = torch.BoolTensor(np.array([t[4] for t in minibatch]))
+		states = torch.FloatTensor(np.array([t[0] for t in minibatch])).to(device)
+		actions = torch.LongTensor(np.array([t[1] for t in minibatch])).to(device)
+		rewards = torch.FloatTensor(np.array([t[2] for t in minibatch])).to(device)
+		next_states = torch.FloatTensor(np.array([t[3] for t in minibatch])).to(device)
+		dones = torch.BoolTensor(np.array([t[4] for t in minibatch])).to(device)
 
 		current_q = self.model(states).gather(1, actions.unsqueeze(1))
 		next_q = self.target_model(next_states).max(1)[0].detach()
@@ -79,7 +81,7 @@ class DQNAgent:
 	def load(self, name):
 		"""Load full agent state"""
 		if os.path.exists(name):
-			checkpoint = torch.load(name)
+			checkpoint = torch.load(name, map_location=device)
 			self.model.load_state_dict(checkpoint['model_state_dict'])
 			self.target_model.load_state_dict(checkpoint['target_model_state_dict'])
 			self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
