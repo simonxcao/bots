@@ -194,7 +194,7 @@ class CupheadEnv:
 		reward = 0
 		
 		# Survival reward
-		reward += 0.05
+		reward += 0.08
 		
 		# Health change penalty/reward
 		current_health = self.current_health
