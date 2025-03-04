@@ -13,7 +13,7 @@ class DQNAgent:
 		self.memory = deque(maxlen=10000)
 		self.gamma = 0.95
 		self.epsilon = 1.0
-		self.epsilon_min = 0.01
+		self.epsilon_min = 0.03
 		self.epsilon_decay = 0.995
 		self.model = self._build_model()
 		self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
@@ -85,6 +85,7 @@ class DQNAgent:
 			self.model.load_state_dict(checkpoint['model_state_dict'])
 			self.target_model.load_state_dict(checkpoint['target_model_state_dict'])
 			self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-			self.epsilon = checkpoint.get('epsilon', 1.0)
+			self.epsilon = 0.03
+			# self.epsilon = checkpoint.get('epsilon', 1.0)
 			self.memory = deque(checkpoint.get('memory', []), maxlen=10000)
 			print(f"Loaded agent from {name}")

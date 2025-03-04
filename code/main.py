@@ -122,7 +122,12 @@ def train_rl():
 	
 	with open(log_file, "a") as f:
 		for episode in range(episodes):
-			state = env.reset()
+			# Check if we need a regular reset or a win reset
+			if hasattr(env, 'win_detected') and env.win_detected:
+				state = env.reset_on_win()
+			else:
+				state = env.reset()
+				
 			total_reward = 0
 			done = False
 			
