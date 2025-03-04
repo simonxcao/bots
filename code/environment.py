@@ -9,7 +9,7 @@ import torch
 
 class CupheadEnv:
 	def __init__(self, model_path="runs/detect/train/weights/best.pt", 
-				game_window_name="Cuphead", action_delay=0.025):
+				game_window_name="Cuphead", action_delay=0.01):
 		# Game control parameters
 		self.done = False
 		self.win_detected = False
@@ -229,17 +229,22 @@ class CupheadEnv:
 			if hasattr(self, 'movement_direction') and hasattr(self, 'consecutive_moves'):
 				# print("consecutive movement", self.consecutive_moves)
 				# Reward for maintaining consecutive moves in the same direction
-				if self.consecutive_moves >= 3 and self.consecutive_moves <= 10:
+				if self.consecutive_moves >= 3 and self.consecutive_moves <= 15:
 					reward += 0.01 * self.consecutive_moves
 				# Extra reward for switching direction after a good sequence
 				if self.consecutive_moves >= 5 and self.movement_direction_changed:
 					reward += 0.2
 					self.movement_direction_changed = False
 			
-			# Reward for staying in the middle 75% of the screen (between 0.125 and 0.875)
-			if 0.125 <= player_x_normalized <= 0.875:
+			# Reward for staying in the middle 60% of the screen
+			if 0.2 <= player_x_normalized <= 0.8:
 				print("middle position reward")
-				reward += 0.01
+				reward += 0.1
+
+			# larger hugging wall penalty for third phase
+			if player_x_normalized < 0.05:
+				# print("hugging wall penalty")
+				reward -= 0.1
 				
 		return reward
 
