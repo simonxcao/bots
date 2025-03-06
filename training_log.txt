@@ -3333,3 +3333,4 @@ Episode: 398, Total Reward: -57.57, Epsilon: 0.04
 Episode: 399, Total Reward: -54.39, Epsilon: 0.04
 Episode: 400, Total Reward: -55.99, Epsilon: 0.04
 Checkpoint 9
+

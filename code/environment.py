@@ -199,7 +199,7 @@ class CupheadEnv:
 		# Health change penalty/reward
 		current_health = self.current_health
 		if current_health < self.last_health:
-			reward -= (self.last_health - current_health) * 20
+			reward -= (self.last_health - current_health) * 10
 		self.last_health = current_health
 		
 		# Position-based rewards and penalties
