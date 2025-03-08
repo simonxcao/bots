@@ -49,6 +49,7 @@ def detection_loop():
 
 	# Load the YOLO model on the appropriate device (GPU if available)
 	device = "cuda" if torch.cuda.is_available() else "cpu"
+	device = "cuda"
 	model = YOLO("runs/detect/train/weights/best.pt").to(device)
 
 	# Create (or reuse) an OpenCV window for displaying detection results.
@@ -114,7 +115,7 @@ def train_rl():
 	# Initialize agent with optional loading
 	agent = DQNAgent(state_size, action_size, load_path=args.load or CHECKPOINT_PATH)
 	
-	episodes = 1300
+	episodes = 20000
 	update_target_freq = 10
 	save_checkpoint_freq = 50  # Save every 50 episodes
 
@@ -122,6 +123,7 @@ def train_rl():
 	
 	with open(log_file, "a") as f:
 		for episode in range(episodes):
+			print(f"episode: {episode}")
 			# Check if we need a regular reset or a win reset
 			if hasattr(env, 'win_detected') and env.win_detected:
 				state = env.reset_on_win()
