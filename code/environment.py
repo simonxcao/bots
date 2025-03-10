@@ -94,6 +94,7 @@ class CupheadEnv:
 				
 				# Check for win condition
 				if class_name == 'win_results':
+					print("WINNER")
 					self.win_detected = True
 					self.done = True
 					return self._vectorize_state(state)
