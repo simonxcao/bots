@@ -279,26 +279,26 @@ class CupheadEnv:
 		pdi.keyUp('j')
 		
 		# Wait 5 seconds
-		time.sleep(5)
+		time.sleep(15)
 		
 		# Press F8
 		pdi.press('f8')
 		
 		# Press ESC
-		pdi.press('esc')
+		pdi.press('z')
 		
 		# Wait 4 seconds
-		time.sleep(4)
+		time.sleep(8)
 		
 		# Press 'a' four times
-		for _ in range(4):
+		for _ in range(12):
 			pdi.press('a')
 		
 		# Press 'z'
 		pdi.press('z')
 		
 		# Wait 2 seconds
-		time.sleep(2)
+		time.sleep(3)
 		
 		# Press 'z' again
 		pdi.press('z')
