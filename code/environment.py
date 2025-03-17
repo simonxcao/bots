@@ -94,6 +94,7 @@ class CupheadEnv:
 				
 				# Check for win condition
 				if class_name == 'win_results':
+					print("WINNER")
 					self.win_detected = True
 					self.done = True
 					return self._vectorize_state(state)
@@ -203,31 +204,28 @@ class CupheadEnv:
 		self.last_health = current_health
 		
 		# Position-based rewards and penalties
+		past_first_phase = False
+		if hasattr(self, 'second_phase_reached') and self.second_phase_reached:
+			past_first_phase = True
+
 		if self.current_state is not None and len(self.current_state) >= 2:
 			player_x_normalized = self.current_state[0]
 			
-			# Penalty for being too close to left edge
-			if player_x_normalized < 0.05:
-				# print("hugging wall penalty")
+			# First positioning rewards/penalties
+			if player_x_normalized < 0.05 or player_x_normalized > 0.95:
 				reward -= 0.02
-			# Penalty for being too close to right edge
-			if player_x_normalized > 0.95:
-				reward -= 0.01
 		
 		# Apply jumping penalty after second phase is reached
-		if hasattr(self, 'second_phase_reached') and self.second_phase_reached:
-			# print("2nd phase check")
+		if past_first_phase:
 			# Penalize jumping after second phase (action 2 is jump)
 			if hasattr(self, 'last_action') and self.last_action == 2:
-				# print("jump penalty")
 				reward -= 1
 				
-		# Third phase logic - carrot detection and movement incentives
+		# Third phase logic
 		if hasattr(self, 'carrot_detected') and self.carrot_detected:
 			# We're in the third phase (carrot was detected)
 			# Reward horizontal movement patterns
 			if hasattr(self, 'movement_direction') and hasattr(self, 'consecutive_moves'):
-				# print("consecutive movement", self.consecutive_moves)
 				# Reward for maintaining consecutive moves in the same direction
 				if self.consecutive_moves >= 3 and self.consecutive_moves <= 15:
 					reward += 0.01 * self.consecutive_moves
@@ -238,12 +236,10 @@ class CupheadEnv:
 			
 			# Reward for staying in the middle 60% of the screen
 			if 0.2 <= player_x_normalized <= 0.8:
-				print("middle position reward")
 				reward += 0.1
 
 			# larger hugging wall penalty for third phase
-			if player_x_normalized < 0.05:
-				# print("hugging wall penalty")
+			if player_x_normalized < 0.05 or player_x_normalized > 0.95:
 				reward -= 0.1
 				
 		return reward
@@ -283,26 +279,26 @@ class CupheadEnv:
 		pdi.keyUp('j')
 		
 		# Wait 5 seconds
-		time.sleep(5)
+		time.sleep(15)
 		
 		# Press F8
 		pdi.press('f8')
 		
 		# Press ESC
-		pdi.press('esc')
+		pdi.press('z')
 		
 		# Wait 4 seconds
-		time.sleep(4)
+		time.sleep(8)
 		
 		# Press 'a' four times
-		for _ in range(4):
+		for _ in range(12):
 			pdi.press('a')
 		
 		# Press 'z'
 		pdi.press('z')
 		
 		# Wait 2 seconds
-		time.sleep(2)
+		time.sleep(3)
 		
 		# Press 'z' again
 		pdi.press('z')
