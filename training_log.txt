@@ -1,4 +1,4 @@
-Checkpoint 0
+Checkpoint 1
 Episode: 1, Total Reward: -26.12, Epsilon: 0.77
 Episode: 2, Total Reward: -25.67, Epsilon: 0.61
 Episode: 3, Total Reward: -26.00, Epsilon: 0.47
@@ -349,7 +349,7 @@ Episode: 347, Total Reward: -23.36, Epsilon: 0.03
 Episode: 348, Total Reward: -23.84, Epsilon: 0.03
 Episode: 349, Total Reward: -25.16, Epsilon: 0.03
 Episode: 350, Total Reward: -18.57, Epsilon: 0.03
-Checkpoint 1
+Checkpoint 2
 Episode: 1, Total Reward: -20.06, Epsilon: 0.03
 Episode: 2, Total Reward: -21.36, Epsilon: 0.03
 Episode: 3, Total Reward: -20.66, Epsilon: 0.03

@@ -18,7 +18,7 @@ class CupheadEnv:
 			0: ('a', 'left'),    # Move left
 			1: ('d', 'right'),   # Move right
 			2: ('l', 'jump'),    # Jump
-			3: ('e', 'nothing'), 	 # agent presses a key that does nothing
+			3: ('e', 'nothing'), # agent presses a key that does nothing
 		}
 		
 		# Screen capture setup
