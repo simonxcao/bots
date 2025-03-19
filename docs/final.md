@@ -9,7 +9,7 @@ title: Final Report
 ## Project Summary
 Cuphead is a run-and-gun platformer known for its intense boss battles and stunning hand-drawn animation. Players take control of Cuphead in order to defeat many enemies, utilizing precise movement and fast-paced combat. The game’s challenge is amplified by intricate platforming and an overwhelming barrage of projectiles, demanding high precision and skill, even from a human player. With its iconic cartoon art style, Cuphead is instantly recognizable and visually captivating, which we thought would make it well-suited for an object detection model. From the start, we knew we wanted to take on a challenging video game, and Cuphead was the ideal choice.
  
- Our project focuses on developing and efficiently training an AI agent capable of defeating a Cuphead boss(The Root Pack) using deep reinforcement learning. Our method utilizes a two-stage machine learning approach: first, a computer vision component using YOLO (You Only Look Once) for real-time object detection and game state understanding, which is then followed by a deep Q-learning network (DQN) for action decision making. We would have to manually start the game and load up the level, but the agent would take over from there. The agent processes raw gameplay images to identify critical elements such as the player character, boss, projectiles, and health indicators, then uses this information to make optimal decisions for movement and dodging. After 3,650 training runs, our agent successfully defeated the boss with 2 HP remaining.
+ Our project focuses on developing and efficiently training an AI agent capable of defeating a Cuphead boss(The Root Pack) using deep reinforcement learning. Our method utilizes a two-stage machine learning approach: first, a computer vision component using YOLO (You Only Look Once) for real-time object detection and game state understanding, which is then followed by a deep Q-learning network (DQN) for action decision making. We would have to manually start the game and load up the level, but the agent would take over from there. The agent processes raw gameplay images to identify critical elements such as the player character, boss, projectiles, and health indicators, then uses this information to make optimal decisions for movement and dodging. After 2,650 training runs, our agent successfully defeated the boss with 2 HP remaining.
 
 The challenge of defeating a Cuphead boss is non-trivial for several reasons:
 1. **Complex Visual Environment**: The game features visually rich, hand-drawn animations with multiple overlapping elements that make state interpretation difficult.
@@ -233,7 +233,7 @@ The graph plots average total rewards across 25 episode segments. An episode rep
  - This graph plots average total rewards across 50 episodes. An episode is a singular run of the boss battle. 
  
  ![RL Reward Graph zoomed](assets/final_training_curve_zoomed.png){: height="400" }
- - This image shows the tail end of the graph at around 3600 episodes. The datapoint with reward above 0 is the first successful run.
+ - This image shows the tail end of the graph at around 2600 episodes. The datapoint with reward above 0 is the first successful run.
  
 
 ### Qualitative Analysis
