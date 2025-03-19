@@ -32,6 +32,11 @@
   
   
   
+  <!--h1>/final.html</h1-->
+  
+  
+  
+  
   <!--h1>/</h1-->
   
   
@@ -81,7 +86,7 @@
               href="proposal.html">Proposal</a></li>
           <li class=""><a
               href="status.html">Status</a></li>
-          <li class="disabled"><a
+          <li class=""><a
               href="final.html">Final</a></li>
           <li class=""><a href="team.html">Team Details</a></li>
         </ul>
@@ -105,7 +110,8 @@
 <p><strong>Summary</strong>
 Our project involves training a reinforcement learning (RL) agent to play the game <em>Cuphead</em>, specifically to defeat the Root Pack boss fight. We use a YOLO object detection model to analyze the game’s screen in real-time, then feed the data through a DQN which learns to make optimal decisions and execute inputs based on the observed state of the game. The project aims to explore the challenges of training AI in fast-paced, visually complex environments such as video games.</p>
 
-<p><img src="assets/CUPHEAD_RL.png" alt="Cuphead AI Image" width="300" /></p>
+<p><strong>Source code:</strong> 
+<a href="https://github.com/simonxcao/bots">https://github.com/simonxcao/bots</a></p>
 
 <p><strong>Reports:</strong></p>
 <ul>
@@ -114,8 +120,7 @@ Our project involves training a reinforcement learning (RL) agent to play the ga
   <li><a href="final.html">Final</a></li>
 </ul>
 
-<p><strong>Source code:</strong> 
-<a href="https://github.com/simonxcao/bots">https://github.com/simonxcao/bots</a></p>
+<p><img src="assets/CUPHEAD_RL.png" alt="Cuphead AI Image" width="300" /></p>
 
 <hr />
 
@@ -134,8 +139,10 @@ Our project involves training a reinforcement learning (RL) agent to play the ga
   </li>
   <li>This page was helpful in creating the object detection model. <br />
  <a href="https://docs.ultralytics.com/models/yolo11/">https://docs.ultralytics.com/models/yolo11/</a></li>
-  <li>We also created our own Cuphead dataset for object detection here:<br />
- <a href="https://app.roboflow.com/cuphead-pj7jz/cuphead-objects/6">https://app.roboflow.com/cuphead-pj7jz/cuphead-objects/6</a></li>
+  <li>We also created our own Cuphead dataset for object detection. This was used to train the YOLO object detection model The dataset can be found here:<br />
+ <a href="https://app.roboflow.com/cuphead-pj7jz/cuphead-objects/6">https://app.roboflow.com/cuphead-pj7jz/cuphead-objects/6</a>
+ <br />
+ <img src="assets/object_detection_example.png" alt="Object Detection Example" height="300" /></li>
 </ul>
 
 
