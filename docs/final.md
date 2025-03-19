@@ -8,13 +8,16 @@ title: Final Report
 
 
 ## Project Summary
-Cuphead is a run and gun platformer game known for its challenging boss battles and hand-drawn animation. Players control Cuphead and use various abilities to fight enemies. Our project focuses on developing an AI agent capable of defeating a Cuphead boss using deep reinforcement learning. Our method utilizes a two-stage machine learning approach: first, a computer vision component using YOLO (You Only Look Once) for real-time object detection and game state understanding, which is then followed by a deep Q-learning network (DQN) for action decision making. We would have to manually start the game and load up the level, but the agent would take over from there. The agent processes raw gameplay images to identify critical elements such as the player character, boss, projectiles, and health indicators, then uses this information to make optimal decisions for movement and dodging. Currently, our agent has demonstrated significant progress, reaching the third phase of the boss fight after 3500 training runs, showing promising potential for achieving complete victory with further optimization.
+Cuphead is a run-and-gun platformer known for its intense boss battles and stunning hand-drawn animation. Players take control of Cuphead in order to defeat many enemies, utilizing precise movement and fast-paced combat. The game’s challenge is amplified by intricate platforming and an overwhelming barrage of projectiles, demanding high precision and skill, even from a human player. With its iconic cartoon art style, Cuphead is instantly recognizable and visually captivating, which we thought would make it well-suited for an object detection model. From the start, we knew we wanted to take on a challenging video game, and Cuphead was the ideal choice.
+
+Our project focuses on developing and efficiently training an AI agent capable of defeating a Cuphead boss(The Root Pack) using deep reinforcement learning. Our method utilizes a two-stage machine learning approach: first, a computer vision component using YOLO (You Only Look Once) for real-time object detection and game state understanding, which is then followed by a deep Q-learning network (DQN) for action decision making. We would have to manually start the game and load up the level, but the agent would take over from there. The agent processes raw gameplay images to identify critical elements such as the player character, boss, projectiles, and health indicators, then uses this information to make optimal decisions for movement and dodging. After 3,650 training runs, our agent successfully defeated the boss with 2 HP remaining.
+
 
 ## Approach
 Our solution combines state-of-the-art computer vision with reinforcement learning, implemented through a dual-stage pipeline:
 
 ### Stage 1: Computer Vision (State Recognition)
-We utilize the YOLO (You Only Look Once) object detection model for real-time game state understanding. The model processes game frames to detect and classify. We also had to label the data manually in order to train the YOLO recognition model such as labeling the character, bosses, projectiles, and health indicators:
+We utilize the YOLO (You Only Look Once) object detection model for real-time game state understanding. We decided on YOLO because it prioritizes speed, which is critical for keeping up with Cuphead's fast-paced gameplay. The model processes game frames to detect and classify. We also labeled the data manually in order to train the YOLO recognition model such as labeling the character, bosses, projectiles, and health indicators:
 - Player character position
 - Boss position and state
 - Projectiles and hazards
@@ -31,7 +34,9 @@ s_t = \begin{bmatrix}
 $$
 
 ### Stage 2: Deep Q-Learning Network (Action Selection)
-We implement a Deep Q-Network (DQN) with the following architecture:
+For the reinforcement learning model, we decided to go with a Deep Q-Network (DQN) because it best for discrete action spaces, and we wanted to use an off-policy to decide our actions, since it works best with slow, non-parallel training simulations.
+
+Our model uses the following architecture:
 ```
 Input Layer (4 neurons) → Dense(128) + ReLU → Dense(64) + ReLU → Output Layer (4 actions)
 ```
@@ -54,43 +59,58 @@ Action Space:
 
 Hyperparameters:
 - Learning rate: 0.001 (Adam optimizer)
-- Epsilon: 1.0 → 0.01 (decay rate: 0.995)
+- Epsilon: 1.0 → 0.03 (decay rate: 0.995)
 - Batch size: 32
-- Action delay: 0.1s
+- Action delay: 0.01s
 
-Reward Structure:
+Reward Structure: 
 1. Base survival reward: +0.02 per timestep
 2. Health-based penalties:
    - Base penalty: -20 per health point lost
-   - Phase multiplier: penalty * (1 + (phase - 1) * 0.5)
-3. Phase progression rewards:
-   - Phase 1 → 2: +50
-   - Phase 2 → 3: +100
-   - Quick transition bonus (< 60s): 1.5x
-   - Perfect transition bonus (no damage): 1.25x
-4. Positioning rewards:
-   - Optimal position maintenance: +0.1 * (1 - distance_from_optimal/screen_width)
-   - Edge penalty: -0.1 when too close to screen edges
-5. Projectile avoidance:
-   - Dynamic reward based on distance increase from projectiles
-   - Scaled by phase: 0.1 * sqrt(current_phase)
+3. Positioning rewards:
+   - Edge penalty: -0.02 when too close to screen edges (within the left or right 1/20th of screen)
+4. Phase progression rewards:
+   - Phase 1: 
+   - - No special rewards
+   - Phase 2:
+   - - Jumping Penalty: -1
+   - Phase 3:
+   - - Optimal Position Reward: +0.1 when not within the left or right 1/5th of screen
+   - - Extra Edge Penalty: -0.1 when too close to screen edges (within the left or right 1/20th of screen)
+   - - Rewards for Specific Movement Patterns:
+   - - Reward for moving in a consecutive direction for 3-15 steps: +0.01 * # of consec. moves
+   - - Reward for changing directions after 5+ steps: +0.2
+
+![Reward Flow Chart](assets/reward_flow_chart.png){: height="400" }
 
 ## Evaluation
 
 ### Quantitative Metrics
 
 1. **Training Progress**
-- Current achievement: Reached Phase 3 in 3,500 runs
+- Current achievement: 1st successful run in 3,650 runs
 - Baseline comparison: Random agent (<25% boss health depletion)
-- Current performance: ~60% boss health depletion
+- Current performance: 100% boss health depletion
 - Average survival time: Increasing trend (graph to be added)
 
-2. **Health Management**
+2. **Reward Progress**
+- Reward results over time over different models being trained:
+- -28 to -15 is the gradual progress
+- Adding the phase-specific rewards improved the agents performance significantly.
+
+![RL reward Graph](assets/final_training_curve.png){: height="400" }
+- This graph plots average total rewards across 50 episodes. An episode is a singular run of the boss battle. 
+
+![RL Reward Graph zoomed](assets/final_training_curve_zoomed.png){: height="400" }
+- This image shows the tail end of the graph at around 3600 episodes. The datapoint with reward above 0 is the first successful run.
+
+
+<!-- old stuff. all made up? -->
+<!-- 2. **Health Management**
 - Starting health: 4 points
 - Average health at phase transitions:
   - Phase 1 → 2: 1.7 health points
   - Phase 2 → 3: 1.2 health points
-
 
 3. **Phase Progression**
 - Average time to reach Phase 2: 85 seconds
@@ -98,13 +118,12 @@ Reward Structure:
 - Success rate reaching Phase 2: 60%
 - Success rate reaching Phase 3: 10%
 
-
 4. **Reward Progress**
 - Reward results over time over different models being trained:
 - -60 to -50 is the gradual progress
 - Reason for this is because the reward function is not optimized yet and we aren't rewarding the agent for surviving more and performing more optimal actions
 - This graph plots average total rewards across 25 episode segments. An episode is a singular run of the boss battle. Episode rewards were not initially recorded, though model checkpoints were periodically saved. To approximate the full training curve, a separate program later captured rewards from loading the model at earlier checkpoints.
-![RL reward Graph](assets/CupheadAI_training_curve.png){: height="400" }
+![RL reward Graph](assets/CupheadAI_training_curve.png){: height="400" } -->
 
 ### Qualitative Analysis
 
