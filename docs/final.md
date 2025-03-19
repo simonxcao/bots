@@ -216,13 +216,11 @@ For the reinforcement learning model, we decided to go with a Deep Q-Network (DQ
 1. **Training Progress**
 
 Our DQN agent showed significant improvement over the baseline random agent. After 2,650 training episodes, the agent successfully:
+- Reached its first successful run
 - Reached Phase 3 consistently (compared to baseline rarely reaching Phase 2)
 - Depleted approximately 60% of the boss's total health (compared to <25% for random agent)
 - Improved survival time by 215% compared to baseline
 
-The training progress is visualized in the reward curve below, showing incremental improvement despite the challenging negative reward structure:
-
-The graph plots average total rewards across 25 episode segments. An episode represents a single run of the boss battle. While rewards remain negative due to our penalty-focused reward structure, the steady upward trend indicates the agent's improving performance.
 
 2. **Reward Progress**
  - Reward results over time over different models being trained:

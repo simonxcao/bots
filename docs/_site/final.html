@@ -387,14 +387,11 @@ Our reward function evolved throughout development, with the final version incor
 
 <p>Our DQN agent showed significant improvement over the baseline random agent. After 2,650 training episodes, the agent successfully:</p>
 <ul>
+  <li>Reached its first successful run</li>
   <li>Reached Phase 3 consistently (compared to baseline rarely reaching Phase 2)</li>
   <li>Depleted approximately 60% of the boss’s total health (compared to &lt;25% for random agent)</li>
   <li>Improved survival time by 215% compared to baseline</li>
 </ul>
-
-<p>The training progress is visualized in the reward curve below, showing incremental improvement despite the challenging negative reward structure:</p>
-
-<p>The graph plots average total rewards across 25 episode segments. An episode represents a single run of the boss battle. While rewards remain negative due to our penalty-focused reward structure, the steady upward trend indicates the agent’s improving performance.</p>
 
 <ol>
   <li><strong>Reward Progress</strong>
