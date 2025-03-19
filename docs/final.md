@@ -7,7 +7,9 @@ title: Final Report
 <iframe width="560" height="315" src="https://www.youtube.com/embed/LerQo3rzL9k" frameborder="0" allowfullscreen></iframe>
 
 ## Project Summary
-Our project focused on developing an AI agent capable of defeating a boss in the game Cuphead using deep reinforcement learning. Cuphead is known for its challenging boss fights that require precise timing, pattern recognition, and quick reflexes. The objective was to create an agent that could observe the game through computer vision, understand the complex patterns of the boss's attacks, and learn optimal strategies to defeat it.
+Cuphead is a run-and-gun platformer known for its intense boss battles and stunning hand-drawn animation. Players take control of Cuphead in order to defeat many enemies, utilizing precise movement and fast-paced combat. The game’s challenge is amplified by intricate platforming and an overwhelming barrage of projectiles, demanding high precision and skill, even from a human player. With its iconic cartoon art style, Cuphead is instantly recognizable and visually captivating, which we thought would make it well-suited for an object detection model. From the start, we knew we wanted to take on a challenging video game, and Cuphead was the ideal choice.
+ 
+ Our project focuses on developing and efficiently training an AI agent capable of defeating a Cuphead boss(The Root Pack) using deep reinforcement learning. Our method utilizes a two-stage machine learning approach: first, a computer vision component using YOLO (You Only Look Once) for real-time object detection and game state understanding, which is then followed by a deep Q-learning network (DQN) for action decision making. We would have to manually start the game and load up the level, but the agent would take over from there. The agent processes raw gameplay images to identify critical elements such as the player character, boss, projectiles, and health indicators, then uses this information to make optimal decisions for movement and dodging. After 3,650 training runs, our agent successfully defeated the boss with 2 HP remaining.
 
 The challenge of defeating a Cuphead boss is non-trivial for several reasons:
 1. **Complex Visual Environment**: The game features visually rich, hand-drawn animations with multiple overlapping elements that make state interpretation difficult.
@@ -45,6 +47,7 @@ For the first stage of our approach, we used object detection to interpret the g
      - Progress indicators
 
 2. **YOLO Implementation**:
+   - We utilize the YOLO (You Only Look Once) object detection model for real-time game state understanding. We decided on YOLO because it prioritizes speed, which is critical for keeping up with Cuphead's fast-paced gameplay. The model processes game frames to detect and classify. We also labeled the data manually in order to train the YOLO recognition model such as labeling the character, bosses, projectiles, and health indicators:
    - Trained YOLOv8 model on our labeled dataset
    - Implemented real-time screen capture (~30fps)
    - Processed detections to extract relevant state information:
@@ -96,7 +99,7 @@ For the first stage of our approach, we used object detection to interpret the g
      $$
 
 ### Deep Q-Learning Network (DQN)
-For the action selection component, we implemented a Deep Q-Network with the following characteristics:
+For the reinforcement learning model, we decided to go with a Deep Q-Network (DQN) because it best for discrete action spaces, and we wanted to use an off-policy to decide our actions, since it works best with slow, non-parallel training simulations.
 
 1. **Network Architecture**:
    ```
@@ -155,7 +158,7 @@ For the action selection component, we implemented a Deep Q-Network with the fol
    ```
 
 4. **Training Process**:
-   - Epsilon-greedy exploration (ε: 1.0 → 0.01, decay rate: 0.995)
+   - Epsilon-greedy exploration (ε: 1.0 → 0.03, decay rate: 0.995)
    - Batch size: 32
    - Action delay: 0.01s (later optimized from initial 0.1s)
    - Learning rate: 0.001 (Adam optimizer)
@@ -164,6 +167,23 @@ For the action selection component, we implemented a Deep Q-Network with the fol
    - **Phase 1**: Focus on positioning and basic dodging
    - **Phase 2**: Reduced jumping, more strategic horizontal movement
    - **Phase 3**: Developed oscillating movement patterns, staying in screen center
+
+6. **Positioning rewards**:
+    - Edge penalty: -0.02 when too close to screen edges (within the left or right 1/20th of screen)
+
+7. **Phase progression rewards**:
+    - Phase 1: 
+    - - No special rewards
+    - Phase 2:
+    - - Jumping Penalty: -1
+    - Phase 3:
+    - - Optimal Position Reward: +0.1 when not within the left or right 1/5th of screen
+    - - Extra Edge Penalty: -0.1 when too close to screen edges (within the left or right 1/20th of screen)
+    - - Rewards for Specific Movement Patterns:
+    - - Reward for moving in a consecutive direction for 3-15 steps: +0.01 * # of consec. moves
+    - - Reward for changing directions after 5+ steps: +0.2
+ 
+ ![Reward Flow Chart](assets/reward_flow_chart.png){: height="400" }
 
 ### Advantages and Disadvantages
 
@@ -206,13 +226,17 @@ The training progress is visualized in the reward curve below, showing increment
 
 The graph plots average total rewards across 25 episode segments. An episode represents a single run of the boss battle. While rewards remain negative due to our penalty-focused reward structure, the steady upward trend indicates the agent's improving performance.
 
-2. **Health Management**
-
-Health management improved significantly throughout training:
-- Starting health: 4 points
-- Average health at phase transitions:
-  - Phase 1 → 2: 1.7 health points (baseline: 0.8)
-  - Phase 2 → 3: 1.2 health points (baseline: rarely reached)
+2. **Reward Progress**
+ - Reward results over time over different models being trained:
+ - -28 to -15 is the gradual progress
+ - Adding the phase-specific rewards improved the agents performance significantly.
+ 
+ ![RL reward Graph](assets/final_training_curve.png){: height="400" }
+ - This graph plots average total rewards across 50 episodes. An episode is a singular run of the boss battle. 
+ 
+ ![RL Reward Graph zoomed](assets/final_training_curve_zoomed.png){: height="400" }
+ - This image shows the tail end of the graph at around 3600 episodes. The datapoint with reward above 0 is the first successful run.
+ 
 
 3. **Phase Progression**
 
@@ -284,8 +308,6 @@ While our agent outperformed novice players, it still fell short of experienced 
 
 Throughout this project, we utilized several AI tools to assist with development and documentation:
 
-### Code Development
-- **GitHub Copilot**: Used extensively for code completion, particularly for boilerplate code in our PyTorch implementation and for suggesting optimizations to our reward function.
 
 ### Debugging and Optimization
 - **ChatGPT**: Assisted with debugging issues in our detection pipeline, suggesting optimizations for the reward structure, and discussing implementation approaches for action timing.
