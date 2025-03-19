@@ -215,14 +215,12 @@ For the reinforcement learning model, we decided to go with a Deep Q-Network (DQ
 
 1. **Training Progress**
 
-Our DQN agent showed significant improvement over the baseline random agent. After 3,500 training episodes, the agent successfully:
+Our DQN agent showed significant improvement over the baseline random agent. After 2,650 training episodes, the agent successfully:
 - Reached Phase 3 consistently (compared to baseline rarely reaching Phase 2)
 - Depleted approximately 60% of the boss's total health (compared to <25% for random agent)
 - Improved survival time by 215% compared to baseline
 
 The training progress is visualized in the reward curve below, showing incremental improvement despite the challenging negative reward structure:
-
-![RL reward Graph](assets/CupheadAI_training_curve.png){: height="400" }
 
 The graph plots average total rewards across 25 episode segments. An episode represents a single run of the boss battle. While rewards remain negative due to our penalty-focused reward structure, the steady upward trend indicates the agent's improving performance.
 
@@ -237,26 +235,6 @@ The graph plots average total rewards across 25 episode segments. An episode rep
  ![RL Reward Graph zoomed](assets/final_training_curve_zoomed.png){: height="400" }
  - This image shows the tail end of the graph at around 3600 episodes. The datapoint with reward above 0 is the first successful run.
  
-
-3. **Phase Progression**
-
-Our agent demonstrated increasingly consistent phase progression:
-- Success rate reaching Phase 2: 60% (baseline: 15%)
-- Success rate reaching Phase 3: 10% (baseline: <1%)
-- Average time to reach Phase 2: 85 seconds
-- Average time to reach Phase 3: 170 seconds
-
-4. **Action Distribution Analysis**
-
-We analyzed the agent's action distribution across different phases:
-
-| Phase | Move Left | Move Right | Jump | No Action |
-|-------|-----------|------------|------|-----------|
-| 1     | 32%       | 35%        | 28%  | 5%        |
-| 2     | 41%       | 43%        | 12%  | 4%        |
-| 3     | 44%       | 45%        | 5%   | 6%        |
-
-This distribution shows how the agent adapted its strategy for different phases, particularly reducing jumping behavior in later phases as our reward function encouraged.
 
 ### Qualitative Analysis
 
