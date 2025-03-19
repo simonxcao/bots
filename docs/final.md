@@ -115,9 +115,9 @@ For the reinforcement learning model, we decided to go with a Deep Q-Network (DQ
      $$
      
    where:
-   - $\theta$: Current network parameters
-   - $\theta^-$: Target network parameters
-   - $\gamma$: Discount factor (0.95)
+   - $$\theta$$: Current network parameters
+   - $$\theta^-$$: Target network parameters
+   - $$\gamma$$: Discount factor (0.95)
    - D: Experience replay buffer (size: 10,000)
 
 3. **Adaptive Reward Structure**:
